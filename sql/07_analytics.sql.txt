@@ -1,0 +1,53 @@
+--Analytics
+--TOTAL SALES KPI
+CREATE OR REPLACE TABLE GOLD.TOTAL_SALES AS
+SELECT 
+    SUM(total_amount) AS total_revenue,
+    COUNT(DISTINCT transaction_id) AS total_transactions
+FROM SILVER.SALES_HEADER_CLEAN;
+
+--SALES BY STORE
+CREATE OR REPLACE TABLE GOLD.SALES_BY_STORE AS
+SELECT 
+    s.store_id,
+    st.store_name,
+    SUM(s.total_amount) AS total_sales
+FROM SILVER.SALES_HEADER_CLEAN s
+JOIN SILVER.STORE_CLEAN st 
+ON s.store_id = st.store_id
+GROUP BY s.store_id, st.store_name;
+
+--TOP PRODUCTS
+CREATE OR REPLACE TABLE GOLD.TOP_PRODUCTS AS
+SELECT 
+    p.product_name,
+    SUM(li.quantity) AS total_quantity_sold,
+    SUM(li.quantity * li.price) AS revenue
+FROM SILVER.SALES_LINE_ITEMS_CLEAN li
+JOIN SILVER.PRODUCT_CLEAN p 
+ON li.product_id = p.product_id
+GROUP BY p.product_name
+ORDER BY revenue DESC;
+
+--CUSTOMER SEGMENT ANALYSIS
+CREATE OR REPLACE TABLE GOLD.CUSTOMER_SEGMENT AS
+SELECT 
+    loyalty_tier,
+    COUNT(*) AS total_customers
+FROM SILVER.CUSTOMER_CLEAN
+GROUP BY loyalty_tier;
+
+--DAILY SALES TREND
+CREATE OR REPLACE TABLE GOLD.DAILY_SALES AS
+SELECT 
+    DATE(transaction_timestamp) AS sales_date,
+    SUM(total_amount) AS daily_revenue
+FROM SILVER.SALES_HEADER_CLEAN
+GROUP BY sales_date
+ORDER BY sales_date;
+
+--High-value KPI
+CREATE OR REPLACE TABLE GOLD.AVG_ORDER_VALUE AS
+SELECT 
+    SUM(total_amount) / COUNT(DISTINCT transaction_id) AS avg_order_value
+FROM SILVER.SALES_HEADER_CLEAN;
