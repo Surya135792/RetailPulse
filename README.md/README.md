@@ -73,6 +73,26 @@ RetailPulse is a scalable data pipeline built using Snowflake that processes ret
 
 ---
 
+Explanation (CRITICAL) :
+
+👉 “Our project RetailPulse is a real-time retail data pipeline built using Snowflake.”
+
+👉 “We ingest data from AWS S3 using Snowpipe into the Bronze layer.”
+
+👉 “Using Streams and Tasks, we process incremental data into the Silver layer for cleaning and transformation.”
+
+👉 “In the Gold layer, we implement dimensional modeling with Fact and Dimension tables including SCD Type-2 for customer tracking.”
+
+👉 “Finally, we generate business insights like total sales, top products, and customer segmentation.”
+
+
+**Flow Diagram (Must)
+Use:**
+draw.io (diagrams.net)
+
+S3 → Snowpipe → Bronze → Streams → Tasks → Silver → Streams → Tasks → Gold → Analytics
+
+
 🏆 Outcome
 
 A fully automated, scalable, and production-ready ETL pipeline for retail analytics.
